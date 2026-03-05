@@ -1,0 +1,73 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import NewsCard from '../components/NewsCard.astro';
+import MassSchedule from '../components/MassSchedule.astro';
+import { getChurchConfig, getChurchId } from '../lib/church';
+import { getCollection } from 'astro:content';
+
+const config = getChurchConfig();
+const churchId = getChurchId();
+
+const allNoticias = await getCollection('noticias', ({ data }) => data.church === churchId);
+const latestNoticias = allNoticias
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
+  .slice(0, 3);
+
+const NEW_DAYS = 7;
+const now = Date.now();
+---
+
+<BaseLayout>
+  <Fragment slot="head">
+    <title>{config.name}</title>
+  </Fragment>
+
+  <section class="relative bg-primary text-white">
+    <div class="absolute inset-0 bg-black/30" aria-hidden="true"></div>
+    <div class="relative container mx-auto px-4 py-16 md:py-24 text-center">
+      <h1 class="text-3xl md:text-4xl font-bold max-w-2xl mx-auto">{config.name}</h1>
+      <p class="mt-4 text-white/90 text-lg">{config.address}</p>
+      <a
+        href="/folheto"
+        class="inline-flex items-center gap-2 mt-8 px-6 py-3 rounded-lg bg-secondary text-gray-900 font-semibold hover:bg-secondary/90 transition-colors min-h-[44px]"
+      >
+        Folheto Litúrgico do Dia
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <div class="container mx-auto px-4 py-8 md:py-12">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div class="lg:col-span-2">
+        <h2 class="text-2xl font-bold text-gray-900 mb-4">Últimas notícias</h2>
+        {latestNoticias.length > 0 ? (
+          <ul class="space-y-4">
+            {latestNoticias.map((entry) => {
+              const isNew = (now - entry.data.pubDate.getTime()) / (1000 * 60 * 60 * 24) < NEW_DAYS;
+              return (
+                <li>
+                  <NewsCard
+                    slug={entry.id}
+                    title={entry.data.title}
+                    description={entry.data.description}
+                    pubDate={entry.data.pubDate}
+                    category={entry.data.category}
+                    image={entry.data.image}
+                    isNew={isNew}
+                  />
+                </li>
+              );
+            })}
+          </ul>
+        ) : (
+          <p class="text-gray-500">Nenhuma notícia publicada ainda.</p>
+        )}
+        <a href="/noticias" class="inline-block mt-4 text-primary font-medium hover:underline">Ver todas as notícias</a>
+      </div>
+      <div>
+        <MassSchedule schedule={config.schedule} />
+      </div>
+    </div>
+  </div>
+</BaseLayout>

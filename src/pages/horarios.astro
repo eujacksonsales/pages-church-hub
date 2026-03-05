@@ -1,0 +1,54 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import MassSchedule from '../components/MassSchedule.astro';
+import { getChurchConfig } from '../lib/church';
+
+const config = getChurchConfig();
+const DAYS_ORDER = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
+const sortedMissas = [...config.schedule.missas].sort(
+  (a, b) => DAYS_ORDER.indexOf(a.dia) - DAYS_ORDER.indexOf(b.dia)
+);
+---
+
+<BaseLayout>
+  <Fragment slot="head">
+    <title>Horários - {config.shortName}</title>
+  </Fragment>
+
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">Horários</h1>
+    <p class="text-gray-600 mb-8">{config.name}</p>
+
+    <div class="max-w-2xl">
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <div class="p-4 md:p-6 border-b border-gray-100">
+          <h2 class="font-semibold text-lg text-primary">Missas</h2>
+          <ul class="mt-4 space-y-3">
+            {sortedMissas.map(({ dia, horarios }) => (
+              <li class="flex flex-wrap items-center justify-between gap-2 py-2 border-b border-gray-50 last:border-0">
+                <span class="font-medium text-gray-800">{dia}</span>
+                <span class="text-gray-600">{horarios.join(', ')}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        {(config.schedule.batismo || config.schedule.catequese || config.schedule.secretaria) && (
+          <div class="p-4 md:p-6 bg-gray-50/50">
+            <h2 class="font-semibold text-lg text-primary mb-3">Outros horários</h2>
+            <ul class="space-y-2 text-gray-700">
+              {config.schedule.batismo && (
+                <li><strong>Batismo:</strong> {config.schedule.batismo}</li>
+              )}
+              {config.schedule.catequese && (
+                <li><strong>Catequese:</strong> {config.schedule.catequese}</li>
+              )}
+              {config.schedule.secretaria && (
+                <li><strong>Secretaria:</strong> {config.schedule.secretaria}</li>
+              )}
+            </ul>
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+</BaseLayout>

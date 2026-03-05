@@ -1,0 +1,28 @@
+{
+  "name": "Paróquia Coração Imaculado de Maria",
+  "shortName": "Coração Imaculado",
+  "address": "R. Carapeba, 284 - Brasília Teimosa, Recife - PE",
+  "cep": "51010-420",
+  "phone": "",
+  "email": "",
+  "whatsapp": "",
+  "theme": {
+    "primary": "#6b2d5c",
+    "secondary": "#c9a84c",
+    "accent": "#1a5f4a",
+    "background": "#faf8f5",
+    "text": "#2d2d2d"
+  },
+  "schedule": {
+    "missas": [
+      { "dia": "Domingo", "horarios": ["08:00", "19:00"] },
+      { "dia": "Segunda-feira", "horarios": ["19:30"] },
+      { "dia": "Quinta-feira", "horarios": ["19:30"] },
+      { "dia": "Sábado", "horarios": ["19:30"] }
+    ],
+    "batismo": "2º e 4º Domingo do Mês",
+    "catequese": "Sábados às 14h",
+    "secretaria": ""
+  },
+  "mapsEmbedUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3950.3500000000004!2d-34.9100!3d-8.0900!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zOMKwMDUnMjQuMCJTIDM0wrA1NCczNi4wIlc!5e0!3m2!1spt-BR!2sbr!4v1"
+}

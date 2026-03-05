@@ -1,0 +1,35 @@
+---
+interface Props {
+  slug: string;
+  title: string;
+  description?: string;
+  pubDate: Date;
+  category?: string;
+  image?: string;
+  isNew?: boolean;
+}
+
+const { slug, title, description, pubDate, category, image, isNew = false } = Astro.props;
+const dateStr = pubDate.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
+---
+
+<article class="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+  <a href={`/noticias/${slug}`} class="block">
+    {image && (
+      <div class="aspect-video bg-gray-100">
+        <img src={image} alt="" class="w-full h-full object-cover" loading="lazy" />
+      </div>
+    )}
+    <div class="p-4">
+      <div class="flex items-center gap-2 flex-wrap">
+        <time class="text-sm text-gray-500" datetime={pubDate.toISOString()}>{dateStr}</time>
+        {category && <span class="text-xs px-2 py-0.5 rounded bg-primary/10 text-primary">{category}</span>}
+        {isNew && (
+          <span class="text-xs font-semibold px-2 py-0.5 rounded bg-accent text-white">Novo</span>
+        )}
+      </div>
+      <h2 class="mt-2 font-semibold text-lg text-gray-900 line-clamp-2">{title}</h2>
+      {description && <p class="mt-1 text-sm text-gray-600 line-clamp-2">{description}</p>}
+    </div>
+  </a>
+</article>

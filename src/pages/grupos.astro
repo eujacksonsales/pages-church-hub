@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import GroupCard from '../components/GroupCard.astro';
+import { getChurchId } from '../lib/church';
+import { getCollection } from 'astro:content';
+
+const churchId = getChurchId();
+const allGrupos = await getCollection('grupos', ({ data }) => data.church === churchId);
+const sorted = allGrupos.sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
+const byCategory = sorted.reduce<Record<string, typeof sorted>>((acc, entry) => {
+  const cat = entry.data.category || 'Outros';
+  if (!acc[cat]) acc[cat] = [];
+  acc[cat].push(entry);
+  return acc;
+}, {});
+const categories = Object.keys(byCategory).sort();
+---
+
+<BaseLayout>
+  <Fragment slot="head">
+    <title>Grupos e Pastorais</title>
+  </Fragment>
+
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">Grupos e Pastorais</h1>
+    <p class="text-gray-600 mb-8">Conheça os grupos e pastorais de nossa paróquia e seus coordenadores.</p>
+
+    {categories.length > 0 ? (
+      <div class="space-y-10">
+        {categories.map((cat) => (
+          <section>
+            <h2 class="text-xl font-semibold text-primary mb-4 border-b border-gray-200 pb-2">{cat}</h2>
+            <ul class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+              {byCategory[cat].map((entry) => (
+                <li>
+                  <GroupCard
+                    title={entry.data.title}
+                    category={entry.data.category}
+                    coordinator={entry.data.coordinator}
+                    description={entry.data.description}
+                    image={entry.data.image}
+                  />
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
+      </div>
+    ) : (
+      <p class="text-gray-500">Nenhum grupo cadastrado ainda.</p>
+    )}
+  </div>
+</BaseLayout>

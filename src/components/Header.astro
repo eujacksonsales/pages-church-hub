@@ -1,0 +1,71 @@
+---
+import { getChurchConfig } from '../lib/church';
+import NotificationBell from './NotificationBell.astro';
+
+interface Props {
+  recentCount?: number;
+}
+
+const { recentCount = 0 } = Astro.props;
+const config = getChurchConfig();
+---
+
+<header class="sticky top-0 z-40 bg-primary text-white shadow-md">
+  <div class="container mx-auto px-4 flex items-center justify-between h-14 min-h-[44px] md:h-16">
+    <a href="/" class="font-semibold text-lg truncate max-w-[180px] md:max-w-none" aria-label="Ir para início">
+      {config.shortName}
+    </a>
+    <div class="flex items-center gap-2">
+      <NotificationBell count={recentCount} />
+      <button
+        type="button"
+        id="nav-toggle"
+        class="md:hidden p-2 -mr-2 rounded-lg min-w-[44px] min-h-[44px] flex items-center justify-center aria-label="Abrir menu"
+        aria-expanded="false"
+        aria-controls="main-nav"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+      <nav id="main-nav" class="hidden md:flex items-center gap-6" aria-label="Navegação principal">
+        <a href="/" class="hover:opacity-90 py-2">Início</a>
+        <a href="/noticias" class="hover:opacity-90 py-2">Notícias</a>
+        <a href="/horarios" class="hover:opacity-90 py-2">Horários</a>
+        <a href="/folheto" class="hover:opacity-90 py-2">Folheto</a>
+        <a href="/grupos" class="hover:opacity-90 py-2">Grupos</a>
+        <a href="/formacao" class="hover:opacity-90 py-2">Formação</a>
+        <a href="/contato" class="hover:opacity-90 py-2">Contato</a>
+      </nav>
+    </div>
+  </div>
+  <div id="mobile-nav" class="hidden md:hidden absolute top-full left-0 right-0 bg-primary border-t border-white/20 shadow-lg">
+    <div class="container mx-auto px-4 py-4 flex flex-col gap-1">
+      <a href="/" class="py-3 px-2 rounded-lg hover:bg-white/10 min-h-[44px] flex items-center">Início</a>
+      <a href="/noticias" class="py-3 px-2 rounded-lg hover:bg-white/10 min-h-[44px] flex items-center">Notícias</a>
+      <a href="/horarios" class="py-3 px-2 rounded-lg hover:bg-white/10 min-h-[44px] flex items-center">Horários</a>
+      <a href="/folheto" class="py-3 px-2 rounded-lg hover:bg-white/10 min-h-[44px] flex items-center">Folheto</a>
+      <a href="/grupos" class="py-3 px-2 rounded-lg hover:bg-white/10 min-h-[44px] flex items-center">Grupos</a>
+      <a href="/formacao" class="py-3 px-2 rounded-lg hover:bg-white/10 min-h-[44px] flex items-center">Formação</a>
+      <a href="/contato" class="py-3 px-2 rounded-lg hover:bg-white/10 min-h-[44px] flex items-center">Contato</a>
+    </div>
+  </div>
+</header>
+
+<script>
+  const toggle = document.getElementById('nav-toggle');
+  const mobileNav = document.getElementById('mobile-nav');
+
+  toggle?.addEventListener('click', () => {
+    const isHidden = mobileNav?.classList.contains('hidden');
+    mobileNav?.classList.toggle('hidden');
+    toggle?.setAttribute('aria-expanded', String(!isHidden));
+  });
+
+  mobileNav?.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', () => {
+      mobileNav?.classList.add('hidden');
+      toggle?.setAttribute('aria-expanded', 'false');
+    });
+  });
+</script>

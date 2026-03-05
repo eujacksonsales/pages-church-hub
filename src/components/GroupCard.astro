@@ -1,0 +1,27 @@
+---
+interface Props {
+  title: string;
+  category: string;
+  coordinator: string;
+  description?: string;
+  image?: string;
+}
+
+const { title, category, coordinator, description, image } = Astro.props;
+---
+
+<article class="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+  {image && (
+    <div class="aspect-[4/3] bg-gray-100">
+      <img src={image} alt="" class="w-full h-full object-cover" loading="lazy" />
+    </div>
+  )}
+  <div class="p-4">
+    <span class="text-xs font-medium text-primary uppercase tracking-wide">{category}</span>
+    <h2 class="mt-1 font-semibold text-lg text-gray-900">{title}</h2>
+    <p class="mt-1 text-sm text-gray-600">
+      <strong>Coordenador(a):</strong> {coordinator}
+    </p>
+    {description && <p class="mt-2 text-sm text-gray-600 line-clamp-3">{description}</p>}
+  </div>
+</article>
