@@ -18,6 +18,7 @@ export interface ChurchConfig {
   phone?: string;
   email?: string;
   whatsapp?: string;
+  heroImage?: string;
   theme: {
     primary: string;
     secondary: string;

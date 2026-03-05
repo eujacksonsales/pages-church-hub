@@ -22,11 +22,21 @@ const now = Date.now();
     <title>{config.name}</title>
   </Fragment>
 
-  <section class="relative bg-primary text-white">
-    <div class="absolute inset-0 bg-black/30" aria-hidden="true"></div>
-    <div class="relative container mx-auto px-4 py-16 md:py-24 text-center">
-      <h1 class="text-3xl md:text-4xl font-bold max-w-2xl mx-auto">{config.name}</h1>
-      <p class="mt-4 text-white/90 text-lg">{config.address}</p>
+  <section class="relative bg-primary text-white min-h-[420px] flex items-center overflow-hidden">
+    {config.heroImage ? (
+      <img
+        src={config.heroImage}
+        alt={config.name}
+        class="absolute inset-0 w-full h-full object-cover"
+        loading="eager"
+      />
+    ) : (
+      <div class="absolute inset-0 bg-gradient-to-br from-primary via-primary/80 to-accent/40" aria-hidden="true"></div>
+    )}
+    <div class="absolute inset-0 bg-black/40" aria-hidden="true"></div>
+    <div class="relative container mx-auto px-4 py-20 md:py-28 text-center">
+      <h1 class="text-3xl md:text-5xl font-bold max-w-2xl mx-auto drop-shadow-lg">{config.name}</h1>
+      <p class="mt-4 text-white/90 text-lg drop-shadow">{config.address}</p>
       <a
         href="/folheto"
         class="inline-flex items-center gap-2 mt-8 px-6 py-3 rounded-lg bg-secondary text-gray-900 font-semibold hover:bg-secondary/90 transition-colors min-h-[44px]"

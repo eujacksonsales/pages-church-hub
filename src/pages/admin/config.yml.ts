@@ -1,4 +1,16 @@
-backend:
+import type { APIRoute } from 'astro';
+import { getChurchId } from '../../lib/church';
+
+const churchId = getChurchId();
+
+const churchMeta: Record<string, { label: string; file: string }> = {
+  rosario: { label: 'N. Sra. do Rosário (Pina)', file: 'src/data/rosario.json' },
+  coracao: { label: 'Coração Imaculado (Brasília Teimosa)', file: 'src/data/coracao.json' },
+};
+
+const meta = churchMeta[churchId] ?? churchMeta.rosario;
+
+const yaml = `backend:
   name: git-gateway
   branch: main
 
@@ -16,8 +28,11 @@ collections:
     create: true
     slug: "{{slug}}"
     identifier_field: "title"
+    filter:
+      field: church
+      value: "${churchId}"
     fields:
-      - { label: "Igreja", name: "church", widget: "select", options: ["rosario", "coracao"], default: "rosario" }
+      - { label: "Igreja", name: "church", widget: "hidden", default: "${churchId}" }
       - { label: "Título", name: "title", widget: "string" }
       - { label: "Descrição", name: "description", widget: "string", required: false }
       - { label: "Data", name: "pubDate", widget: "datetime" }
@@ -31,8 +46,11 @@ collections:
     create: true
     slug: "{{slug}}"
     identifier_field: "title"
+    filter:
+      field: church
+      value: "${churchId}"
     fields:
-      - { label: "Igreja", name: "church", widget: "select", options: ["rosario", "coracao"], default: "rosario" }
+      - { label: "Igreja", name: "church", widget: "hidden", default: "${churchId}" }
       - { label: "Nome", name: "title", widget: "string" }
       - { label: "Categoria", name: "category", widget: "string" }
       - { label: "Coordenador(a)", name: "coordinator", widget: "string" }
@@ -47,8 +65,11 @@ collections:
     create: true
     slug: "{{slug}}"
     identifier_field: "title"
+    filter:
+      field: church
+      value: "${churchId}"
     fields:
-      - { label: "Igreja", name: "church", widget: "select", options: ["rosario", "coracao"], default: "rosario" }
+      - { label: "Igreja", name: "church", widget: "hidden", default: "${churchId}" }
       - { label: "Título", name: "title", widget: "string" }
       - { label: "Descrição", name: "description", widget: "string", required: false }
       - { label: "Data", name: "pubDate", widget: "datetime" }
@@ -59,9 +80,9 @@ collections:
   - label: "Configuração da Paróquia"
     name: "config"
     files:
-      - label: "N. Sra. do Rosário (Pina)"
-        name: "rosario"
-        file: "src/data/rosario.json"
+      - label: "${meta.label}"
+        name: "${churchId}"
+        file: "${meta.file}"
         fields:
           - { label: "Nome completo", name: "name", widget: "string" }
           - { label: "Nome curto", name: "shortName", widget: "string" }
@@ -70,26 +91,17 @@ collections:
           - { label: "Telefone", name: "phone", widget: "string", required: false }
           - { label: "Email", name: "email", widget: "string", required: false }
           - { label: "WhatsApp (apenas números)", name: "whatsapp", widget: "string", required: false }
+          - { label: "Imagem principal (topo do site)", name: "heroImage", widget: "image", required: false }
           - { label: "Tema - Primária", name: "theme.primary", widget: "string" }
           - { label: "Tema - Secundária", name: "theme.secondary", widget: "string" }
           - { label: "Tema - Destaque", name: "theme.accent", widget: "string" }
           - { label: "Tema - Fundo", name: "theme.background", widget: "string" }
           - { label: "Tema - Texto", name: "theme.text", widget: "string" }
           - { label: "Horários (JSON - editar com cuidado)", name: "schedule", widget: "object", required: false }
-      - label: "Coração Imaculado (Brasília Teimosa)"
-        name: "coracao"
-        file: "src/data/coracao.json"
-        fields:
-          - { label: "Nome completo", name: "name", widget: "string" }
-          - { label: "Nome curto", name: "shortName", widget: "string" }
-          - { label: "Endereço", name: "address", widget: "string" }
-          - { label: "CEP", name: "cep", widget: "string" }
-          - { label: "Telefone", name: "phone", widget: "string", required: false }
-          - { label: "Email", name: "email", widget: "string", required: false }
-          - { label: "WhatsApp (apenas números)", name: "whatsapp", widget: "string", required: false }
-          - { label: "Tema - Primária", name: "theme.primary", widget: "string" }
-          - { label: "Tema - Secundária", name: "theme.secondary", widget: "string" }
-          - { label: "Tema - Destaque", name: "theme.accent", widget: "string" }
-          - { label: "Tema - Fundo", name: "theme.background", widget: "string" }
-          - { label: "Tema - Texto", name: "theme.text", widget: "string" }
-          - { label: "Horários (JSON)", name: "schedule", widget: "object", required: false }
+`;
+
+export const GET: APIRoute = () => {
+  return new Response(yaml, {
+    headers: { 'Content-Type': 'text/yaml; charset=utf-8' },
+  });
+};
