@@ -1,12 +1,6 @@
 {
-  "name": "Igreja Matriz do Pina - Nossa Senhora do Rosário",
+  "heroImage": "/uploads/unnamed.webp",
   "shortName": "N. Sra. do Rosário",
-  "address": "Av. Herculano Bandeira, 471 - Pina, Recife - PE",
-  "cep": "51011-120",
-  "phone": "",
-  "email": "",
-  "whatsapp": "",
-  "heroImage": "",
   "theme": {
     "primary": "#1e3a5f",
     "secondary": "#c9a84c",
@@ -14,17 +8,55 @@
     "background": "#faf8f5",
     "text": "#2d2d2d"
   },
+  "name": "Igreja Matriz do Pina - Nossa Senhora do Rosário",
+  "mapsEmbedUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3950.450892423789!2d-34.9015!3d-8.0865!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zOMKwMDUnMTEuNCJTIDM0wrA1NCcwNS40Ilc!5e0!3m2!1spt-BR!2sbr!4v1",
+  "cep": "51011-120",
+  "phone": "",
+  "theme.accent": "#8b1a1a",
+  "theme.secondary": "#c9a84c",
+  "whatsapp": "",
+  "theme.text": "#2d2d2d",
+  "theme.background": "#faf8f5",
+  "address": "Av. Herculano Bandeira, 471 - Pina, Recife - PE",
   "schedule": {
     "missas": [
-      { "dia": "Domingo", "horarios": ["08:00", "12:00", "18:00"] },
-      { "dia": "Terça-feira", "horarios": ["19:00"] },
-      { "dia": "Quinta-feira", "horarios": ["19:00"] },
-      { "dia": "Sexta-feira", "horarios": ["19:00"] },
-      { "dia": "Sábado", "horarios": ["19:00"] }
+      {
+        "dia": "Domingo",
+        "horarios": [
+          "08:00",
+          "12:00",
+          "18:00"
+        ]
+      },
+      {
+        "dia": "Terça-feira",
+        "horarios": [
+          "19:00"
+        ]
+      },
+      {
+        "dia": "Quinta-feira",
+        "horarios": [
+          "19:00"
+        ]
+      },
+      {
+        "dia": "Sexta-feira",
+        "horarios": [
+          "19:00"
+        ]
+      },
+      {
+        "dia": "Sábado",
+        "horarios": [
+          "19:00"
+        ]
+      }
     ],
     "batismo": "1º Domingo do Mês",
     "catequese": "",
     "secretaria": ""
   },
-  "mapsEmbedUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3950.450892423789!2d-34.9015!3d-8.0865!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zOMKwMDUnMTEuNCJTIDM0wrA1NCcwNS40Ilc!5e0!3m2!1spt-BR!2sbr!4v1"
+  "email": "",
+  "theme.primary": "#1e3a5f"
 }
