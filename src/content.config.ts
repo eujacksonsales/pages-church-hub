@@ -29,6 +29,14 @@ const formacaoSchema = z.object({
   church: z.enum(['rosario', 'coracao']),
 });
 
+const folhetosSchema = z.object({
+  title: z.string(),
+  description: z.string().optional(),
+  date: z.coerce.date(),
+  pdf: z.string(),
+  church: z.enum(['rosario', 'coracao']),
+});
+
 const noticias = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/noticias' }),
   schema: noticiasSchema,
@@ -44,8 +52,14 @@ const formacao = defineCollection({
   schema: formacaoSchema,
 });
 
+const folhetos = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/folhetos' }),
+  schema: folhetosSchema,
+});
+
 export const collections = {
   noticias,
   grupos,
   formacao,
+  folhetos,
 };

@@ -1,0 +1,91 @@
+---
+interface FolhetoEntry {
+  id: string;
+  data: {
+    title: string;
+    description?: string;
+    date: Date;
+    pdf: string;
+    church: string;
+  };
+}
+
+interface Props {
+  folhetos: FolhetoEntry[];
+}
+
+const { folhetos } = Astro.props;
+
+function normalizePdfPath(pdf: string): string {
+  if (!pdf) return '';
+  if (pdf.startsWith('/')) return pdf;
+  return `/uploads/${pdf}`;
+}
+
+const sorted = [...folhetos].sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const byMonthYear = new Map<string, FolhetoEntry[]>();
+for (const entry of sorted) {
+  const d = entry.data.date;
+  const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+  const label = d.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+  if (!byMonthYear.has(label)) byMonthYear.set(label, []);
+  byMonthYear.get(label)!.push(entry);
+}
+
+const formatDate = (date: Date) =>
+  date.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
+---
+
+<div class="folhetos-viewer space-y-8">
+  {sorted.length === 0 ? (
+    <p class="text-gray-600">Nenhum folheto em PDF publicado ainda.</p>
+  ) : (
+    Array.from(byMonthYear.entries()).map(([monthLabel, entries]) => (
+      <section class="space-y-3">
+        <h3 class="text-lg font-semibold text-gray-900 capitalize border-b border-gray-200 pb-2">
+          {monthLabel}
+        </h3>
+        <ul class="space-y-3">
+          {entries.map((entry) => {
+            const pdfUrl = normalizePdfPath(entry.data.pdf);
+            return (
+              <li class="flex flex-wrap items-center gap-3 p-3 rounded-lg border border-gray-200 bg-white hover:border-primary/30 transition-colors">
+                <div class="flex-1 min-w-0">
+                  <p class="font-medium text-gray-900">{entry.data.title}</p>
+                  <time class="text-sm text-gray-500" datetime={entry.data.date.toISOString()}>
+                    {formatDate(entry.data.date)}
+                  </time>
+                  {entry.data.description && (
+                    <p class="text-sm text-gray-600 mt-1">{entry.data.description}</p>
+                  )}
+                </div>
+                <a
+                  href={pdfUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-white font-medium hover:bg-primary/90 transition-colors min-h-[44px]"
+                >
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  Abrir PDF
+                </a>
+                <a
+                  href={pdfUrl}
+                  download
+                  class="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition-colors min-h-[44px]"
+                >
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                  Baixar
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+    ))
+  )}
+</div>

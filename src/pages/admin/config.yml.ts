@@ -77,6 +77,22 @@ collections:
       - { label: "Categoria", name: "category", widget: "select", options: ["Sacramentos", "Santos", "Liturgia", "Doutrina", "Oracoes", "Geral"], default: "Geral" }
       - { label: "Conteúdo", name: "body", widget: "markdown" }
 
+  - name: "folhetos"
+    label: "Folhetos (PDF)"
+    folder: "src/content/folhetos"
+    create: true
+    slug: "{{slug}}"
+    identifier_field: "title"
+    filter:
+      field: church
+      value: "${churchId}"
+    fields:
+      - { label: "Igreja", name: "church", widget: "hidden", default: "${churchId}" }
+      - { label: "Título", name: "title", widget: "string" }
+      - { label: "Descrição", name: "description", widget: "string", required: false }
+      - { label: "Data do folheto", name: "date", widget: "datetime" }
+      - { label: "PDF", name: "pdf", widget: "file", allow_multiple: false }
+
   - label: "Configuração da Paróquia"
     name: "config"
     files:

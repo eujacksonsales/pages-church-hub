@@ -1,20 +1,98 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import LiturgiaViewer from '../components/LiturgiaViewer.astro';
-import { getChurchConfig } from '../lib/church';
+import FolhetosViewer from '../components/FolhetosViewer.astro';
+import { getChurchConfig, getChurchId } from '../lib/church';
+import { getCollection } from 'astro:content';
 
 const config = getChurchConfig();
+const churchId = getChurchId();
+const folhetos = await getCollection('folhetos', ({ data, id }) => data.church === churchId && id !== '_placeholder');
 ---
 
 <BaseLayout>
   <Fragment slot="head">
     <title>Folheto Litúrgico - {config.shortName}</title>
-    <meta name="description" content="Liturgia do dia - leituras da missa" />
+    <meta name="description" content="Liturgia do dia e folhetos em PDF - leituras da missa" />
   </Fragment>
 
   <div class="container mx-auto px-4 py-8 max-w-3xl">
     <h1 class="text-3xl font-bold text-gray-900 mb-2">Folheto Litúrgico</h1>
-    <p class="text-gray-600 mb-6">Leituras da liturgia do dia</p>
-    <LiturgiaViewer />
+    <p class="text-gray-600 mb-6">Leituras da liturgia do dia ou folhetos completos em PDF.</p>
+
+    <div class="folheto-tabs" role="tablist" aria-label="Escolha entre liturgia do dia e folhetos PDF">
+      <div class="flex gap-1 p-1 rounded-lg bg-gray-100 border border-gray-200 mb-6">
+        <button
+          type="button"
+          role="tab"
+          id="tab-liturgia"
+          aria-selected="true"
+          aria-controls="panel-liturgia"
+          class="folheto-tab flex-1 px-4 py-2 rounded-md font-medium text-gray-700 hover:text-gray-900 data-[active]:bg-white data-[active]:text-primary data-[active]:shadow-sm transition-colors min-h-[44px]"
+          data-tab="liturgia"
+          data-active="true"
+        >
+          Liturgia do Dia
+        </button>
+        <button
+          type="button"
+          role="tab"
+          id="tab-folhetos"
+          aria-selected="false"
+          aria-controls="panel-folhetos"
+          class="folheto-tab flex-1 px-4 py-2 rounded-md font-medium text-gray-700 hover:text-gray-900 data-[active]:bg-white data-[active]:text-primary data-[active]:shadow-sm transition-colors min-h-[44px]"
+          data-tab="folhetos"
+        >
+          Folhetos em PDF
+        </button>
+      </div>
+
+      <div
+        id="panel-liturgia"
+        role="tabpanel"
+        aria-labelledby="tab-liturgia"
+        class="folheto-panel"
+        data-panel="liturgia"
+      >
+        <LiturgiaViewer />
+      </div>
+      <div
+        id="panel-folhetos"
+        role="tabpanel"
+        aria-labelledby="tab-folhetos"
+        class="folheto-panel hidden"
+        data-panel="folhetos"
+        hidden
+      >
+        <FolhetosViewer folhetos={folhetos} />
+      </div>
+    </div>
   </div>
 </BaseLayout>
+
+<script>
+  const tablist = document.querySelector('.folheto-tabs');
+  if (tablist) {
+    const tabs = tablist.querySelectorAll<HTMLButtonElement>('.folheto-tab');
+    const panels = tablist.querySelectorAll<HTMLElement>('.folheto-panel');
+
+    function activate(tab: HTMLButtonElement) {
+      const panelId = tab.getAttribute('aria-controls');
+      const panel = panelId ? document.getElementById(panelId) : null;
+
+      tabs.forEach((t) => {
+        t.setAttribute('aria-selected', t === tab ? 'true' : 'false');
+        t.setAttribute('data-active', t === tab ? 'true' : '');
+      });
+      panels.forEach((p) => {
+        const isActive = p === panel;
+        p.classList.toggle('hidden', !isActive);
+        p.hidden = !isActive;
+      });
+    }
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => activate(tab));
+    });
+  }
+</script>
